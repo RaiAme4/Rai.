@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri Hadiah</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #FFD1DC;
+            margin: 0;
+            padding: 0;
+        }
+        .opening {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 20;
+            cursor: pointer;
+        }
+        .opening img {
+            width: 80%;
+            max-width: 400px;
+        }
+        .gallery {
+            display: none;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 20px;
+        }
+        .gallery img {
+            width: 45%;
+            max-width: 150px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+        .gallery img:hover {
+            transform: scale(1.1);
+        }
+        .fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        .fullscreen img {
+            width: 90%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+        }
+        #final-btn {
+            display: none;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background: #ff4081;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        #final-btn:hover {
+            background: #e91e63;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Audio Musik Latar Belakang -->
+    <audio id="bg-music" loop>
+        <source src="AA.mp3" type="audio/mpeg">
+        Browser Anda tidak mendukung audio tag.
+    </audio>
+
+    <!-- Audio Efek Klik -->
+    <audio id="click-sound">
+        <source src="BB.mp3" type="audio/mpeg">
+        Browser Anda tidak mendukung audio tag.
+    </audio>
+
+    <!-- Gambar Opening -->
+    <div class="opening" onclick="startGame()">
+        <img src="opening.gif" alt="Opening">
+    </div>
+
+    <!-- Judul -->
+    <h2 id="judul" style="display: none;">🎁 Pilih Hadiah 🎁</h2>
+
+    <!-- Galeri Hadiah -->
+    <div class="gallery" id="gallery">
+        <img src="coklat.gif" alt="Coklat" onclick="showFullscreen('1.gif', this)">
+        <img src="surat.gif" alt="Kalung" onclick="showFullscreen('2.gif', this)">
+        <img src="misteri.gif" alt="Bunga" onclick="showFullscreen('3.gif', this)">
+        <img src="bunga.gif" alt="Misteri" onclick="showFullscreen('4.gif', this)">
+    </div>
+
+    <!-- Tombol Rahasia (Muncul setelah semua tombol ditekan) -->
+    <button id="final-btn" onclick="showFullscreen('final.png')"> 1 email special from Raina 📨💌💌</button>
+
+    <!-- Tampilan Fullscreen -->
+    <div class="fullscreen" id="fullscreen">
+        <span class="close-btn" onclick="closeFullscreen()">✖</span>
+        <img id="fullscreen-img" src="" alt="Fullscreen Image">
+    </div>
+
+    <script>
+        let clickedButtons = 0; // Menghitung jumlah tombol yang sudah ditekan
+        const totalButtons = 4; // Total tombol hadiah yang harus ditekan sebelum tombol spesial muncul
+
+        function startGame() {
+            document.querySelector('.opening').style.display = 'none';
+            document.getElementById('judul').style.display = 'block';
+            document.getElementById('gallery').style.display = 'flex';
+
+            // Mulai musik latar belakang
+            var music = document.getElementById('bg-music');
+            music.play();
+        }
+
+        function showFullscreen(imageSrc, element = null) {
+            playClickSound(); // Memainkan efek suara klik
+            document.getElementById('fullscreen-img').src = imageSrc;
+            document.getElementById('fullscreen').style.display = 'flex';
+
+            if (element && !element.dataset.clicked) {
+                clickedButtons++; // Menambah jumlah tombol yang ditekan
+                element.dataset.clicked = "true"; // Menandai tombol sudah diklik
+
+                // Jika semua tombol sudah ditekan, tampilkan tombol final
+                if (clickedButtons === totalButtons) {
+                    document.getElementById('final-btn').style.display = 'block';
+                }
+            }
+        }
+        
+        function closeFullscreen() {
+            playClickSound(); // Efek suara juga diputar saat menutup
+            document.getElementById('fullscreen').style.display = 'none';
+        }
+
+        function playClickSound() {
+            var clickSound = document.getElementById('click-sound');
+            clickSound.currentTime = 0; // Restart suara agar bisa diputar berulang
+            clickSound.play();
+        }
+    </script>
+
+</body>
+</html>
